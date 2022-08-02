@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiCloudFlareConfig.Console", "TiCloudFlareConfig.Console\TiCloudFlareConfig.Console.csproj", "{59393677-16C3-44B3-B16A-63D63B17D3C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiCloudFlareConfig.WPF", "TiCloudFlareConfig.WPF\TiCloudFlareConfig.WPF.csproj", "{355E606C-E434-4A66-9572-63C412FDC1B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiCloudFlareConfig.Shared", "TiCloudFlareConfig.Shared\TiCloudFlareConfig.Shared.csproj", "{D427E103-5E2D-4C8C-BC7D-7386AD5A2BCF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{59393677-16C3-44B3-B16A-63D63B17D3C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59393677-16C3-44B3-B16A-63D63B17D3C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59393677-16C3-44B3-B16A-63D63B17D3C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59393677-16C3-44B3-B16A-63D63B17D3C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{355E606C-E434-4A66-9572-63C412FDC1B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{355E606C-E434-4A66-9572-63C412FDC1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{355E606C-E434-4A66-9572-63C412FDC1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{355E606C-E434-4A66-9572-63C412FDC1B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D427E103-5E2D-4C8C-BC7D-7386AD5A2BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D427E103-5E2D-4C8C-BC7D-7386AD5A2BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D427E103-5E2D-4C8C-BC7D-7386AD5A2BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D427E103-5E2D-4C8C-BC7D-7386AD5A2BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
