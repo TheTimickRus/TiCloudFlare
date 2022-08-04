@@ -56,6 +56,7 @@ public class HomePageViewModel : ObservableObject
     public int SelectedMtuIndex { get; set; }
 
     public IAsyncRelayCommand BGenerateLicCommand => new AsyncRelayCommand(GenerateLic);
+    public IRelayCommand BResetCommand => new RelayCommand(Reset);
     public IAsyncRelayCommand BGenerateConfigCommand => new AsyncRelayCommand(GenerateConfig);
 
     public HomePageViewModel()
@@ -76,6 +77,15 @@ public class HomePageViewModel : ObservableObject
         LicenseKey = accountInfo.License;
         
         dialog?.Hide();
+    }
+    
+    private void Reset()
+    {
+        LicenseKey = "";
+        
+        SelectedEndPointIndex = 0;
+        SelectedEndPointPortIndex = 0;
+        SelectedMtuIndex = 0;
     }
     
     private async Task GenerateConfig()

@@ -32,12 +32,13 @@
                             Text="Лицензия WARP+" />
                         <ui:TextBox
                             Margin="3"
-                            Text="{x:Bind _viewModel.LicenseKey, Mode=TwoWay}"
-                            PlaceholderText="Пожалуйста, укажите Ваш ключ лицензии WARP+ или оставьте поле пустым..." />
+                            ToolTip="Введите Ваш ключ лицензии WARP+ или сгенерируйте его, нажав на кнопку ниже..."
+                            Text="{Binding LicenseKey, Mode=TwoWay}"
+                            PlaceholderText="Введите Ваш ключ лицензии WARP+ или сгенерируйте его, нажав на кнопку ниже..." />
                         <ui:Button
                             Margin="3"
                             Icon="Key24"
-                            Command="{x:Bind _viewModel.BGenerateLicCommand}"
+                            Command="{Binding BGenerateLicCommand}"
                             Content="Сгенерировать лицензию WARP+"
                             Appearance="Success" />
                     </StackPanel>
@@ -52,9 +53,10 @@
                         <StackPanel Orientation="Horizontal">
                             <ComboBox
                                 Margin="3"
-                                SelectedItem="{x:Bind _viewModel.SelectedEndPoint, Mode=TwoWay}"
+                                ToolTip="Параметр ENDPOINT"
+                                SelectedItem="{Binding SelectedEndPoint, Mode=TwoWay}"
                                 SelectedIndex="{Binding SelectedEndPointIndex}"
-                                ItemsSource="{x:Bind _viewModel.EndPoints}" />
+                                ItemsSource="{Binding EndPoints}" />
                             <TextBlock
                                 Margin="3"
                                 VerticalAlignment="Center"
@@ -63,20 +65,23 @@
                                 FontWeight="Bold" />
                             <ComboBox
                                 Margin="3"
-                                SelectedItem="{x:Bind _viewModel.SelectedEndPointPort, Mode=TwoWay}"
+                                ToolTip="Параметр ENDPOINT PORT"
+                                SelectedItem="{Binding SelectedEndPointPort, Mode=TwoWay}"
                                 SelectedIndex="{Binding SelectedEndPointPortIndex}"
-                                ItemsSource="{x:Bind _viewModel.EndPointPorts}" />
+                                ItemsSource="{Binding EndPointPorts}" />
                             <ui:Button
                                 Margin="3"
+                                Visibility="Hidden"
                                 Appearance="Success"
                                 Content="Проверить работоспособность"
                                 Icon="Globe24" />
                         </StackPanel>
                         <ComboBox
                             Margin="3"
-                            SelectedItem="{x:Bind _viewModel.SelectedMtu, Mode=TwoWay}"
+                            ToolTip="Параметр MTU"
+                            SelectedItem="{Binding SelectedMtu, Mode=TwoWay}"
                             SelectedIndex="{Binding SelectedMtuIndex}"
-                            ItemsSource="{x:Bind _viewModel.Mtu}" />
+                            ItemsSource="{Binding Mtu}" />
                     </StackPanel>
                 </ui:Card>
             </StackPanel>
@@ -88,12 +93,13 @@
                     Margin="3"
                     Appearance="Danger"
                     Icon="ArrowReset24"
+                    Command="{Binding BResetCommand}"
                     Content="Сбросить параметры" />
                 <ui:Button
                     Margin="3"
                     Appearance="Success"
                     Icon="TextBoxSettings24"
-                    Command="{x:Bind _viewModel.BGenerateConfigCommand}"
+                    Command="{Binding BGenerateConfigCommand}"
                     Content="Создать конфигурационный файл" />
             </StackPanel>
         </ui:Card>
