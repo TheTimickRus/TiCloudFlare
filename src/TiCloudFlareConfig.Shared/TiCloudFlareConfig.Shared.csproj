@@ -16,6 +16,8 @@
     <ItemGroup>
       <None Remove="Assets\wgcf.exe" />
       <EmbeddedResource Include="Assets\wgcf.exe" />
+      <None Remove="Assets\Keys.toml" />
+      <EmbeddedResource Include="Assets\keys.toml" />
     </ItemGroup>
 
 </Project>

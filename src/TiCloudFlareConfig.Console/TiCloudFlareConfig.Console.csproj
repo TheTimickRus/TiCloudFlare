@@ -2,12 +2,12 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Company>TheTimickRus</Company>
-        <AssemblyVersion>1.0</AssemblyVersion>
-        <FileVersion>1.0</FileVersion>
+        <AssemblyVersion>1.1</AssemblyVersion>
+        <FileVersion>1.1</FileVersion>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,7 +20,10 @@
 
     <ItemGroup>
       <None Remove="Assets\wgcf.exe" />
-      <EmbeddedResource Include="Assets\wgcf.exe" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TiCloudFlareConfig.Shared\TiCloudFlareConfig.Shared.csproj" />
     </ItemGroup>
 
 </Project>

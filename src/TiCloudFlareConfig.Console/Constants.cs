@@ -10,7 +10,7 @@ public static class Constants
         /// <summary>
         /// *Название программы* (*Версия* (*дата*)) by *Разработчик*
         /// </summary>
-        public const string FullTitle = "TiCloudFlareConfig.Console (v.1.0 (09.07.2022)) by TheTimickRus";
+        public const string FullTitle = $"TiCloudFlare.Console ({Version} (08.08.2022)) by TheTimickRus";
         /// <summary>
         /// *Название программы* by *Разработчик*
         /// </summary>
@@ -19,6 +19,12 @@ public static class Constants
         /// *Название программы*
         /// </summary>
         public const string VeryShortTitle = "TiCloudFlare";
+
+        public const string ExecutableName = "TiCloudFlare.Console.exe";
+        /// <summary>
+        /// Версия программы
+        /// </summary>
+        public const string Version = "v.1.1";
         /// <summary>
         /// Имя лог-файла
         /// </summary>

@@ -14,12 +14,27 @@ public static class WireGuardConfig
 {
     #region Constants
 
-    private const string FileName = "Resources\\wgcf.exe";
+    private const string KeysFileName = "Resources\\keys.toml";
+    private const string WgCfFileName = "Resources\\wgcf.exe";
 
     #endregion
     
     #region PublicMethods
 
+    public static void ExtractResources()
+    {
+        if (!File.Exists(KeysFileName))
+            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(KeysFileName), "Resources");
+        
+        if (!File.Exists(WgCfFileName))
+            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(WgCfFileName), "Resources");
+    }
+
+    public static KeysResponse FetchKeys()
+    {
+        return Toml.ToModel<KeysResponse>(File.ReadAllText(KeysFileName));
+    }
+    
     public static WireGuardConfigResponse Register(WireGuardConfigParams configParams)
     {
         var tagDate = $"{DateTime.Now.ToString("s").Replace(':', '-')}_Warp";
@@ -90,11 +105,11 @@ public static class WireGuardConfig
     
     private static void ProcStart(string args)
     {
-        if (!File.Exists(FileName))
-            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(FileName), "Resources");
+        if (!File.Exists(WgCfFileName))
+            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(WgCfFileName), "Resources");
         
         var proc = Process.Start(
-            new ProcessStartInfo($"{FileName}", args)
+            new ProcessStartInfo($"{WgCfFileName}", args)
             {
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
@@ -122,7 +137,7 @@ public static class WireGuardConfig
         configStr = configStr
             .Replace(
                 "Endpoint = engage.cloudflareclient.com:2408", 
-                $"Endpoint = {configParams.EndPoint}:{configParams.EndPointPort}");
+                $"Endpoint = {configParams.EndPoint}:{configParams.Port}");
         
         File.WriteAllText(config, configStr);
     }

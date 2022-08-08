@@ -59,8 +59,13 @@ public class HomePageViewModel : ObservableObject
     public IRelayCommand BResetCommand => new RelayCommand(Reset);
     public IAsyncRelayCommand BGenerateConfigCommand => new AsyncRelayCommand(GenerateConfig);
 
+    private readonly KeysResponse _keysResponse;
+    
     public HomePageViewModel()
     {
+        WireGuardConfig.ExtractResources();
+        _keysResponse = WireGuardConfig.FetchKeys();
+        
         SelectedEndPointIndex = 0;
         SelectedEndPointPortIndex = 0;
         SelectedMtuIndex = 0;
@@ -71,7 +76,7 @@ public class HomePageViewModel : ObservableObject
         var dialog = (Application.Current.MainWindow as Container)?.IndeterminateProgressDialog;
         dialog?.Show();
 
-        var accountInfo = await new GenerateLicenseService().GenerateAsync();
+        var accountInfo = await new GenerateLicenseService(_keysResponse.WarpKeys).GenerateAsync();
         Guard.Against.Null(accountInfo);
 
         LicenseKey = accountInfo.License;
@@ -97,7 +102,7 @@ public class HomePageViewModel : ObservableObject
         {
             License = LicenseKey,
             EndPoint = SelectedEndPoint,
-            EndPointPort = SelectedEndPointPort,
+            Port = SelectedEndPointPort,
             Mtu = SelectedMtu
         };
 
