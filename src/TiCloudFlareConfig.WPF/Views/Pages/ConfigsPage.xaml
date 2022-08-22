@@ -1,0 +1,64 @@
+﻿<ui:UiPage
+    x:Class="TiCloudFlareConfig.WPF.Views.Pages.ConfigsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:pages="clr-namespace:TiCloudFlareConfig.WPF.ViewModels.Pages"
+    Title="ConfigsPage"
+    d:DataContext="{d:DesignInstance pages:ConfigsPageViewModel,
+                                     IsDesignTimeCreatable=False}"
+    mc:Ignorable="d">
+
+    <Grid Margin="6,0,6,6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Grid.Row="0"
+            BorderThickness="0"
+            CornerRadius="3"
+            Background="{ui:ThemeResource ControlFillColorDefaultBrush}">
+
+            <Menu BorderThickness="0" Background="Transparent">
+                <Menu.Items>
+                    <MenuItem Header="Файл">
+                        <MenuItem Header="Экспортировать как">
+                            <MenuItem Header=".config | .toml" />
+                            <MenuItem Header=".zip" />
+                        </MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="Действия">
+                        <MenuItem Header="Изменить" />
+                        <Separator />
+                        <MenuItem Header="Удалить" />
+                        <MenuItem Header="Удалить все" />
+                    </MenuItem>
+                </Menu.Items>
+            </Menu>
+        </Border>
+
+        <ListBox
+            Grid.Row="1"
+            Margin="0,3,0,0"
+            ItemsSource="{Binding Configs, Mode=TwoWay}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Text="{Binding Title}" />
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="Light"
+                            Text="{Binding CreationAt}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</ui:UiPage>

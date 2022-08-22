@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:pages="clr-namespace:TiCloudFlareConfig.WPF.Views.Pages"
-    Width="1200"
+    Width="1104"
     Height="654"
     d:DesignHeight="650"
     d:DesignWidth="900"
@@ -51,12 +51,18 @@
                         Icon="Home24"
                         PageTag="HomePage"
                         PageType="{x:Type pages:HomePage}" />
+
+                    <ui:NavigationItem
+                        Cache="False"
+                        Content="Конфиги"
+                        Icon="Database24"
+                        PageTag="ConfigsPage"
+                        PageType="{x:Type pages:ConfigsPage}" />
                 </ui:NavigationStore.Items>
 
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem
                         Cache="True"
-                        IsEnabled="False"
                         Content="Настройки"
                         Icon="Settings24"
                         PageTag="SettingsPage"
@@ -83,12 +89,13 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         FontSize="24"
+                        FontWeight="Bold"
                         Navigation="{Binding ElementName=RootNavigation}" />
                 </Grid>
             </Border>
 
             <ui:Dialog
-                x:Name="IndeterminateProgressDialog"
+                x:Name="PDialog"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 ButtonLeftVisibility="Hidden"
@@ -101,6 +108,22 @@
                         FontSize="14"
                         FontWeight="Bold"
                         Text="Пожалуйста, подождите..." />
+                </StackPanel>
+            </ui:Dialog>
+
+            <ui:Dialog
+                x:Name="QDialog"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                ButtonLeftName="Yes"
+                ButtonRightName="No">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock
+                        Margin="6"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Text="Вы действительно этого хотите?" />
                 </StackPanel>
             </ui:Dialog>
         </Grid>

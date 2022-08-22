@@ -6,7 +6,6 @@ using System.Reflection;
 using Ardalis.GuardClauses;
 using TiCloudFlareConfig.Shared.WireGuardConfig.Models;
 using Tomlyn;
-using Tomlyn.Model;
 
 namespace TiCloudFlareConfig.Shared.WireGuardConfig;
 

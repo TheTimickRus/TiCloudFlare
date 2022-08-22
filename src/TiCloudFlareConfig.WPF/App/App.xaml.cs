@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TiCloudFlareConfig.WPF.Models;
 using TiCloudFlareConfig.WPF.Services;
+using TiCloudFlareConfig.WPF.Services.Database;
 using TiCloudFlareConfig.WPF.ViewModels.Pages;
 using TiCloudFlareConfig.WPF.Views;
 using TiCloudFlareConfig.WPF.Views.Pages;
@@ -45,12 +46,15 @@ namespace TiCloudFlareConfig.WPF.App
             services.AddSingleton<ITaskBarService, TaskBarService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
-
+            services.AddSingleton<IDataBaseService, DataBaseService>();
+            
             services.AddScoped<INavigationWindow, Container>();
 
             services.AddScoped<HomePage>();
             services.AddScoped<HomePageViewModel>();
-
+            services.AddScoped<ConfigsPage>();
+            services.AddScoped<ConfigsPageViewModel>();
+            
             services.AddScoped<SettingsPage>();
             services.AddScoped<SettingsPageViewModel>();
 

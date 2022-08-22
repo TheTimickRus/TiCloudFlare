@@ -1,79 +1,73 @@
 ﻿#nullable enable
 
-using System.Collections.ObjectModel;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using Ardalis.GuardClauses;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Ookii.Dialogs.Wpf;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 using TiCloudFlareConfig.Shared.LicGenerate;
 using TiCloudFlareConfig.Shared.WireGuardConfig;
 using TiCloudFlareConfig.Shared.WireGuardConfig.Models;
+using TiCloudFlareConfig.WPF.Models.Pages.Configs;
+using TiCloudFlareConfig.WPF.Services.Database;
+using TiCloudFlareConfig.WPF.Services.TiMessageBox;
 using TiCloudFlareConfig.WPF.Views;
 
 namespace TiCloudFlareConfig.WPF.ViewModels.Pages;
 
-public class HomePageViewModel : ObservableObject
+[ObservableObject]
+public partial class HomePageViewModel
 {
-    public string? LicenseKey { get; set; }
+    [ObservableProperty]
+    private string? _licenseKey;
     
-    public ObservableCollection<string> EndPoints { get; } = new()
-    {
-        "engage.cloudflareclient.com",
-        "162.159.193.1",
-        "162.159.193.2",
-        "162.159.193.3",
-        "162.159.193.4",
-        "162.159.193.5",
-        "162.159.193.6",
-        "162.159.193.7",
-        "162.159.193.8",
-        "162.159.193.9",
-    };
-    public ObservableCollection<string> EndPointPorts { get; } = new()
-    {
-        "2408",
-        "500",
-        "1701",
-        "4500"
-    };
-    public ObservableCollection<string> Mtu { get; } = new()
-    {
-        "1280",
-        "1500",
-        "1492",
-        "1440",
-        "1420",
-        "1392"
-    };
-    public string? SelectedEndPoint { get; set; }
-    public int SelectedEndPointIndex {get; set; }
-    public string? SelectedEndPointPort { get; set; }
-    public int SelectedEndPointPortIndex {get; set; }
-    public string? SelectedMtu { get; set; }
-    public int SelectedMtuIndex { get; set; }
-
-    public IAsyncRelayCommand BGenerateLicCommand => new AsyncRelayCommand(GenerateLic);
-    public IRelayCommand BResetCommand => new RelayCommand(Reset);
-    public IAsyncRelayCommand BGenerateConfigCommand => new AsyncRelayCommand(GenerateConfig);
-
+    [ObservableProperty]
+    private List<string> _endPoints;
+    [ObservableProperty]
+    private List<string> _endPointPorts;
+    [ObservableProperty]
+    private List<string> _mtu;
+    
+    [ObservableProperty]
+    private string? _selectedEndPoint;
+    [ObservableProperty]
+    private int _selectedEndPointIndex;
+    [ObservableProperty]
+    private string? _selectedEndPointPort;
+    [ObservableProperty]
+    private int _selectedEndPointPortIndex;
+    [ObservableProperty]
+    private string? _selectedMtu;
+    [ObservableProperty]
+    private int _selectedMtuIndex;
+    
     private readonly KeysResponse _keysResponse;
     
-    public HomePageViewModel()
+    private readonly IDataBaseService _dataBaseService;
+    
+    public HomePageViewModel(IDataBaseService dataBaseService)
     {
+        _dataBaseService = dataBaseService;
+        
         WireGuardConfig.ExtractResources();
         _keysResponse = WireGuardConfig.FetchKeys();
         
-        SelectedEndPointIndex = 0;
-        SelectedEndPointPortIndex = 0;
-        SelectedMtuIndex = 0;
+        _endPoints = _keysResponse.EndPoints;
+        _endPointPorts = _keysResponse.Ports;
+        _mtu = _keysResponse.MTU;
+        _selectedEndPointIndex = 0;
+        _selectedEndPointPortIndex = 0;
+        _selectedMtuIndex = 0;
     }
 
+    [RelayCommand]
     private async Task GenerateLic()
     {
-        var dialog = (Application.Current.MainWindow as Container)?.IndeterminateProgressDialog;
+        var dialog = (Application.Current.MainWindow as Container)?.PDialog;
         dialog?.Show();
 
         var accountInfo = await new GenerateLicenseService(_keysResponse.WarpKeys).GenerateAsync();
@@ -84,51 +78,63 @@ public class HomePageViewModel : ObservableObject
         dialog?.Hide();
     }
     
+    [RelayCommand]
     private void Reset()
     {
-        LicenseKey = "";
+        var dialog = (Application.Current.MainWindow as Container)?.QDialog;
         
-        SelectedEndPointIndex = 0;
-        SelectedEndPointPortIndex = 0;
-        SelectedMtuIndex = 0;
+        Guard.Against.Null(dialog);
+        
+        dialog.Show();
+        dialog.ButtonLeftClick += (_, _) =>
+        {
+            LicenseKey = "";
+            SelectedEndPointIndex = 0;
+            SelectedEndPointPortIndex = 0;
+            SelectedMtuIndex = 0;
+            
+            dialog.Hide();
+        };
+        dialog.ButtonRightClick += (_, _) =>
+        {
+            dialog.Hide();
+        };
     }
     
+    [RelayCommand]
     private async Task GenerateConfig()
     {
-        var dialog = (Application.Current.MainWindow as Container)?.IndeterminateProgressDialog;
+        var dialog = (Application.Current.MainWindow as Container)?.PDialog;
         dialog?.Show();
-
-        var configParams = new WireGuardConfigParams
+        
+        try
         {
-            License = LicenseKey,
-            EndPoint = SelectedEndPoint,
-            Port = SelectedEndPointPort,
-            Mtu = SelectedMtu
-        };
+            var configParams = new WireGuardConfigParams
+            {
+                License = _licenseKey,
+                EndPoint = _selectedEndPoint,
+                Port = _selectedEndPointPort,
+                Mtu = _selectedMtu
+            };
 
-        var configResponse = await WireGuardConfig.RegisterAsync(configParams);
-        SaveConfig(configResponse);
+            var configResponse = await WireGuardConfig.RegisterAsync(configParams);
+            Guard.Against.Null(configResponse.FileConfig);
+            Guard.Against.Null(configResponse.FileToml);
+        
+            _dataBaseService.AddConfig(new Config
+            {
+                Title = Path.GetFileNameWithoutExtension(configResponse.FileConfig),
+                CreationAt = DateTime.Now,
+                IsWarpPlus = configParams.IsLicGenerate,
+                FileConfig = await File.ReadAllTextAsync(configResponse.FileConfig),
+                FileToml = await File.ReadAllTextAsync(configResponse.FileToml)
+            });
+        }
+        catch(Exception ex)
+        {
+            TiMessageBox.ShowError(ex.Message, "Error!");
+        }
         
         dialog?.Hide();
-    }
-
-    private static void SaveConfig(WireGuardConfigResponse? configs)
-    {
-        Guard.Against.Null(configs);
-        
-        var dialog = new VistaFolderBrowserDialog
-        {
-            Description = "Выберите путь сохранения файлов конфигурации...",
-            Multiselect = false,
-            ShowNewFolderButton = true,
-            UseDescriptionForTitle = true
-        };
-
-        if (!(dialog.ShowDialog() ?? false))
-            return;
-        
-        WireGuardConfig.CreateArchive(
-            configs, 
-            Path.Combine(dialog.SelectedPath, $"{Path.GetFileName(configs.FileConfig)}.zip"));
     }
 }

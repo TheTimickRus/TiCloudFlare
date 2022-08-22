@@ -10,7 +10,6 @@ using Spectre.Console.Cli;
 using TiCloudFlareConfig.Console.Enums;
 using TiCloudFlareConfig.Console.Libs;
 using TiCloudFlareConfig.Shared.LicGenerate;
-using TiCloudFlareConfig.Shared.LicGenerate.Models.Responses;
 using TiCloudFlareConfig.Shared.WireGuardConfig;
 using TiCloudFlareConfig.Shared.WireGuardConfig.Models;
 

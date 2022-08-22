@@ -38,7 +38,7 @@
                         <ui:Button
                             Margin="3"
                             Icon="Key24"
-                            Command="{Binding BGenerateLicCommand}"
+                            Command="{Binding GenerateLicCommand}"
                             Content="Сгенерировать лицензию WARP+"
                             Appearance="Success" />
                     </StackPanel>
@@ -55,7 +55,7 @@
                                 Margin="3"
                                 ToolTip="Параметр ENDPOINT"
                                 SelectedItem="{Binding SelectedEndPoint, Mode=TwoWay}"
-                                SelectedIndex="{Binding SelectedEndPointIndex}"
+                                SelectedIndex="{Binding SelectedEndPointIndex, Mode=TwoWay}"
                                 ItemsSource="{Binding EndPoints}" />
                             <TextBlock
                                 Margin="3"
@@ -67,7 +67,7 @@
                                 Margin="3"
                                 ToolTip="Параметр ENDPOINT PORT"
                                 SelectedItem="{Binding SelectedEndPointPort, Mode=TwoWay}"
-                                SelectedIndex="{Binding SelectedEndPointPortIndex}"
+                                SelectedIndex="{Binding SelectedEndPointPortIndex, Mode=TwoWay}"
                                 ItemsSource="{Binding EndPointPorts}" />
                             <ui:Button
                                 Margin="3"
@@ -80,7 +80,7 @@
                             Margin="3"
                             ToolTip="Параметр MTU"
                             SelectedItem="{Binding SelectedMtu, Mode=TwoWay}"
-                            SelectedIndex="{Binding SelectedMtuIndex}"
+                            SelectedIndex="{Binding SelectedMtuIndex, Mode=TwoWay}"
                             ItemsSource="{Binding Mtu}" />
                     </StackPanel>
                 </ui:Card>
@@ -93,13 +93,13 @@
                     Margin="3"
                     Appearance="Danger"
                     Icon="ArrowReset24"
-                    Command="{Binding BResetCommand}"
+                    Command="{Binding ResetCommand}"
                     Content="Сбросить параметры" />
                 <ui:Button
                     Margin="3"
                     Appearance="Success"
                     Icon="TextBoxSettings24"
-                    Command="{Binding BGenerateConfigCommand}"
+                    Command="{Binding GenerateConfigCommand}"
                     Content="Создать конфигурационный файл" />
             </StackPanel>
         </ui:Card>
