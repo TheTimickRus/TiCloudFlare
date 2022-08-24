@@ -76,6 +76,12 @@ public static class WireGuardConfig
         
         ZipFile.CreateFromDirectory(dir, outFileName);
     }
+
+    public static void RemoveTempFiles()
+    {
+        if (Directory.Exists("Configs"))
+            Directory.Delete("Configs", true);
+    }
     
     #endregion
 

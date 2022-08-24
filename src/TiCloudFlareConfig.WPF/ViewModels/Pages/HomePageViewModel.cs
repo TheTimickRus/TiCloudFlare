@@ -4,18 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows;
 using Ardalis.GuardClauses;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Win32;
 using TiCloudFlareConfig.Shared.LicGenerate;
 using TiCloudFlareConfig.Shared.WireGuardConfig;
 using TiCloudFlareConfig.Shared.WireGuardConfig.Models;
 using TiCloudFlareConfig.WPF.Models.Pages.Configs;
 using TiCloudFlareConfig.WPF.Services.Database;
-using TiCloudFlareConfig.WPF.Services.TiMessageBox;
-using TiCloudFlareConfig.WPF.Views;
+using TiCloudFlareConfig.WPF.Services.TiDialog;
+using Wpf.Ui.Controls;
 
 namespace TiCloudFlareConfig.WPF.ViewModels.Pages;
 
@@ -65,47 +63,42 @@ public partial class HomePageViewModel
     }
 
     [RelayCommand]
-    private async Task GenerateLic()
+    private void GenerateLic()
     {
-        var dialog = (Application.Current.MainWindow as Container)?.PDialog;
-        dialog?.Show();
-
-        var accountInfo = await new GenerateLicenseService(_keysResponse.WarpKeys).GenerateAsync();
-        Guard.Against.Null(accountInfo);
-
-        LicenseKey = accountInfo.License;
+        TiDialog.QuestionDialog("Вы действительно этого хотите?\nНа это действие действует лимитное ограничение...",
+            async (sender, _) =>
+            {
+                (sender as Dialog)?.Hide();
+                
+                var dialog = TiDialog.ProgressDialog();
         
-        dialog?.Hide();
+                var accountInfo = await new GenerateLicenseService(_keysResponse.WarpKeys).GenerateAsync();
+                Guard.Against.Null(accountInfo);
+
+                LicenseKey = accountInfo.License;
+        
+                TiDialog.Hide(dialog);
+            });
     }
     
     [RelayCommand]
     private void Reset()
     {
-        var dialog = (Application.Current.MainWindow as Container)?.QDialog;
-        
-        Guard.Against.Null(dialog);
-        
-        dialog.Show();
-        dialog.ButtonLeftClick += (_, _) =>
+        TiDialog.QuestionDialog("Вы действительно этого хотите?", (sender, _) =>
         {
+            (sender as Dialog)?.Hide();
+            
             LicenseKey = "";
             SelectedEndPointIndex = 0;
             SelectedEndPointPortIndex = 0;
             SelectedMtuIndex = 0;
-            
-            dialog.Hide();
-        };
-        dialog.ButtonRightClick += (_, _) =>
-        {
-            dialog.Hide();
-        };
+        });
     }
     
     [RelayCommand]
     private async Task GenerateConfig()
     {
-        var dialog = (Application.Current.MainWindow as Container)?.PDialog;
-        dialog?.Show();
+        var dialog = TiDialog.ProgressDialog();
         
         try
         {
@@ -121,7 +114,7 @@ public partial class HomePageViewModel
             Guard.Against.Null(configResponse.FileConfig);
             Guard.Against.Null(configResponse.FileToml);
         
-            _dataBaseService.AddConfig(new Config
+            _dataBaseService.AddConfig(new ConfigItem
             {
                 Title = Path.GetFileNameWithoutExtension(configResponse.FileConfig),
                 CreationAt = DateTime.Now,
@@ -129,12 +122,14 @@ public partial class HomePageViewModel
                 FileConfig = await File.ReadAllTextAsync(configResponse.FileConfig),
                 FileToml = await File.ReadAllTextAsync(configResponse.FileToml)
             });
+            
+            WireGuardConfig.RemoveTempFiles();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            TiMessageBox.ShowError(ex.Message, "Error!");
+            TiDialog.ErrorDialog(ex.Message);
         }
         
-        dialog?.Hide();
+        TiDialog.Hide(dialog);
     }
 }

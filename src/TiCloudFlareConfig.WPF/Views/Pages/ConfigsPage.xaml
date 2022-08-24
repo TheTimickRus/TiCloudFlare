@@ -6,45 +6,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:pages="clr-namespace:TiCloudFlareConfig.WPF.ViewModels.Pages"
-    Title="ConfigsPage"
+    xmlns:converters="clr-namespace:TiCloudFlareConfig.WPF.Converters"
     d:DataContext="{d:DesignInstance pages:ConfigsPageViewModel,
                                      IsDesignTimeCreatable=False}"
+    Loaded="ConfigsPage_OnLoaded"
     mc:Ignorable="d">
 
+    <ui:UiPage.Resources>
+        <converters:DateTimeConverter x:Key="DateTimeConverter" />
+    </ui:UiPage.Resources>
+
     <Grid Margin="6,0,6,6">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <Border
-            Grid.Row="0"
-            BorderThickness="0"
-            CornerRadius="3"
-            Background="{ui:ThemeResource ControlFillColorDefaultBrush}">
-
-            <Menu BorderThickness="0" Background="Transparent">
-                <Menu.Items>
-                    <MenuItem Header="Файл">
-                        <MenuItem Header="Экспортировать как">
-                            <MenuItem Header=".config | .toml" />
-                            <MenuItem Header=".zip" />
-                        </MenuItem>
-                    </MenuItem>
-                    <MenuItem Header="Действия">
-                        <MenuItem Header="Изменить" />
-                        <Separator />
-                        <MenuItem Header="Удалить" />
-                        <MenuItem Header="Удалить все" />
-                    </MenuItem>
-                </Menu.Items>
-            </Menu>
-        </Border>
-
-        <ListBox
-            Grid.Row="1"
-            Margin="0,3,0,0"
-            ItemsSource="{Binding Configs, Mode=TwoWay}">
+        <ListBox SelectedItem="{Binding SelectedConfigItem, Mode=TwoWay}" ItemsSource="{Binding Configs, Mode=TwoWay}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -55,10 +28,42 @@
                         <TextBlock
                             FontSize="12"
                             FontWeight="Light"
-                            Text="{Binding CreationAt}" />
+                            Text="{Binding CreationAt, Converter={StaticResource DateTimeConverter}}" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <ui:MenuItem SymbolIcon="Save24" Header="Экспортировать как">
+                        <ui:MenuItem
+                            SymbolIcon="Settings24"
+                            Header=".config | .toml"
+                            Command="{Binding ExportCommand}"
+                            CommandParameter="config" />
+                        <ui:MenuItem
+                            SymbolIcon="Archive24"
+                            Header=".zip"
+                            Command="{Binding ExportCommand}"
+                            CommandParameter="zip" />
+                    </ui:MenuItem>
+                    <Separator />
+                    <ui:MenuItem SymbolIcon="WindowEdit20" Header="Действия">
+                        <ui:MenuItem
+                            SymbolIcon="Edit24"
+                            IsEnabled="False"
+                            Header="Изменить" />
+                        <Separator />
+                        <ui:MenuItem
+                            SymbolIcon="Delete24"
+                            Header="Удалить"
+                            Command="{Binding DeleteCommand}" />
+                        <ui:MenuItem
+                            SymbolIcon="DeleteLines20"
+                            Header="Удалить все конфиги"
+                            Command="{Binding DeleteAllCommand}" />
+                    </ui:MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
         </ListBox>
     </Grid>
 </ui:UiPage>

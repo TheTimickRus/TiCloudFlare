@@ -1,4 +1,5 @@
-﻿using TiCloudFlareConfig.WPF.ViewModels.Pages;
+﻿using System.Windows;
+using TiCloudFlareConfig.WPF.ViewModels.Pages;
 
 namespace TiCloudFlareConfig.WPF.Views.Pages;
 
@@ -12,5 +13,10 @@ public partial class ConfigsPage
         _viewModel = viewModel;
         
         InitializeComponent();
+    }
+
+    private void ConfigsPage_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        _viewModel.UpdateCommand.Execute(null);
     }
 }

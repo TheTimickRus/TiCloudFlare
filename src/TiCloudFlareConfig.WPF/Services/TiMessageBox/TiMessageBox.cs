@@ -10,17 +10,28 @@ public static class TiMessageBox
     {
         var mb = new MessageBox
         {
+            Owner = Application.Current.MainWindow,
             WindowStyle = WindowStyle.SingleBorderWindow,
-            ResizeMode = ResizeMode.CanMinimize,
+            ResizeMode = ResizeMode.NoResize,
             Title = caption,
             Content = message,
-            ButtonLeftAppearance = ControlAppearance.Transparent,
-            ButtonLeftName = "",
-            ButtonRightName = "OK"
+            ButtonLeftAppearance = ControlAppearance.Danger,
+            ButtonLeftName = "Завершить работу программы",
+            ButtonRightAppearance = ControlAppearance.Success,
+            ButtonRightName = "Игнорировать ошибку"
         };
+
+        mb.ButtonLeftClick += (_, _) =>
+        {
+            mb.Hide();
+            Application.Current.Shutdown();
+        };
+        
         mb.ButtonRightClick += (_, _) =>
         {
             mb.Hide();
         };
+        
+        mb.Show();
     }
 }

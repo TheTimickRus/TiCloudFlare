@@ -115,17 +115,16 @@
                 x:Name="QDialog"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                ButtonLeftName="Yes"
-                ButtonRightName="No">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock
-                        Margin="6"
-                        VerticalAlignment="Center"
-                        FontSize="14"
-                        FontWeight="Bold"
-                        Text="Вы действительно этого хотите?" />
-                </StackPanel>
-            </ui:Dialog>
+                ButtonLeftName="OK"
+                ButtonRightName="Отмена" />
+
+            <ui:Dialog
+                x:Name="EDialog"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                ButtonLeftVisibility="Hidden"
+                ButtonRightVisibility="Visible"
+                ButtonRightName="OK" />
         </Grid>
 
         <Grid
