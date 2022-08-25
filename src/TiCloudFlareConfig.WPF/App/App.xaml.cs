@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TiCloudFlareConfig.WPF.Models;
 using TiCloudFlareConfig.WPF.Services;
+using TiCloudFlareConfig.WPF.Services.Database;
+using TiCloudFlareConfig.WPF.Services.TiMessageBox;
 using TiCloudFlareConfig.WPF.ViewModels.Pages;
 using TiCloudFlareConfig.WPF.Views;
 using TiCloudFlareConfig.WPF.Views.Pages;
@@ -45,12 +47,15 @@ namespace TiCloudFlareConfig.WPF.App
             services.AddSingleton<ITaskBarService, TaskBarService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
-
+            services.AddSingleton<IDataBaseService, DataBaseService>();
+            
             services.AddScoped<INavigationWindow, Container>();
 
             services.AddScoped<HomePage>();
             services.AddScoped<HomePageViewModel>();
-
+            services.AddScoped<ConfigsPage>();
+            services.AddScoped<ConfigsPageViewModel>();
+            
             services.AddScoped<SettingsPage>();
             services.AddScoped<SettingsPageViewModel>();
 
@@ -71,21 +76,7 @@ namespace TiCloudFlareConfig.WPF.App
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             e.Handled = true;
-            
-            var mb = new MessageBox
-            {
-                WindowStyle = WindowStyle.SingleBorderWindow,
-                ResizeMode = ResizeMode.CanMinimize,
-                Title = "Необработанное исключение!",
-                Content = e.Exception.Message,
-                ButtonLeftName = "OK",
-                ButtonLeftAppearance = ControlAppearance.Success,
-                ButtonRightName = "Закрыть приложение",
-                ButtonRightAppearance = ControlAppearance.Danger
-            };
-            
-            mb.ButtonLeftClick += (_, _) => mb.Close();
-            mb.ButtonRightClick += (_, _) => Current.Shutdown();
+            TiMessageBox.ShowError(e.Exception.Message, "Unhandled Exception!");
         }
     }
 }

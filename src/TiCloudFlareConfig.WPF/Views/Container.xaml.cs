@@ -26,7 +26,7 @@ namespace TiCloudFlareConfig.WPF.Views
             InitializeComponent();
 
             SetPageService(pageService);
-            navigationService.SetNavigation(RootNavigation);
+            navigationService.SetNavigationControl(RootNavigation);
 
             Loaded += (_, _) => InvokeSplashScreen();
 
@@ -75,7 +75,7 @@ namespace TiCloudFlareConfig.WPF.Views
 
             Task.Run(async () =>
             {
-                await Task.Delay(4000);
+                await Task.Delay(2000);
 
                 await Dispatcher.InvokeAsync(() =>
                 {

@@ -1,0 +1,77 @@
+﻿<ui:UiPage
+    x:Class="TiCloudFlareConfig.WPF.Views.Pages.ConfigsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:pages="clr-namespace:TiCloudFlareConfig.WPF.ViewModels.Pages"
+    xmlns:converters="clr-namespace:TiCloudFlareConfig.WPF.Converters"
+    d:DataContext="{d:DesignInstance pages:ConfigsPageViewModel,
+                                     IsDesignTimeCreatable=False}"
+    Loaded="ConfigsPage_OnLoaded"
+    mc:Ignorable="d">
+
+    <ui:UiPage.Resources>
+        <converters:DateTimeConverter x:Key="DateTimeConverter" />
+    </ui:UiPage.Resources>
+
+    <Grid Margin="6,0,6,6">
+        <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Visibility="{Binding PlaceholderVisibility}"
+            FontSize="24"
+            FontWeight="Light"
+            Text="Нет сгенерированных конфигов..." />
+
+        <ListBox SelectedItem="{Binding SelectedConfigItem, Mode=TwoWay}" ItemsSource="{Binding Configs, Mode=TwoWay}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <ui:MenuItem SymbolIcon="Save24" Header="Экспортировать как">
+                                    <ui:MenuItem
+                                        SymbolIcon="Settings24"
+                                        Header=".config | .toml"
+                                        Command="{Binding ExportCommand}"
+                                        CommandParameter="config" />
+                                    <ui:MenuItem
+                                        SymbolIcon="Archive24"
+                                        Header=".zip"
+                                        Command="{Binding ExportCommand}"
+                                        CommandParameter="zip" />
+                                </ui:MenuItem>
+                                <Separator />
+                                <ui:MenuItem SymbolIcon="WindowEdit20" Header="Действия">
+                                    <ui:MenuItem
+                                        SymbolIcon="Edit24"
+                                        IsEnabled="False"
+                                        Header="Изменить" />
+                                    <Separator />
+                                    <ui:MenuItem
+                                        SymbolIcon="Delete24"
+                                        Header="Удалить"
+                                        Command="{Binding DeleteCommand}" />
+                                    <ui:MenuItem
+                                        SymbolIcon="DeleteLines20"
+                                        Header="Удалить все конфиги"
+                                        Command="{Binding DeleteAllCommand}" />
+                                </ui:MenuItem>
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                        <TextBlock
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Text="{Binding Title}" />
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="Light"
+                            Text="{Binding CreationAt, Converter={StaticResource DateTimeConverter}}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</ui:UiPage>

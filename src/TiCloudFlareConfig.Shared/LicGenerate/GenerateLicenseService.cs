@@ -17,20 +17,13 @@ public class GenerateLicenseService
         new KeyValuePair<string, string>("Accept-Encoding", "gzip"),
         new KeyValuePair<string, string>("User-Agent", "okhttp/3.12.1")
     });
-    private readonly IList<string> _keys = new List<string>
+    private readonly IList<string> _keys;
+
+    public GenerateLicenseService(IList<string> keys)
     {
-        "Io935xs2-7z1P65Wi-93wC5Hi2",
-        "d8D2tB46-1ZVB4G75-EFoy6817",
-        "m9054gFd-s7r302Wm-Yd5e310W",
-        "mE4370Tp-37uI5QX0-1520FzTu",
-        "5Ij3k9x8-z89X03Bf-8I046Ttk",
-        "7K142EYT-5h14ZJj9-7nfq46a5",
-        "69R14Lgr-3217hSGw-F6y741jR",
-        "23t1Zw8K-V9MR4v58-79G4oU6u",
-        "9YDz3x04-970w6ptv-cC27y38t",
-        "q7Wr91K4-5Mp8yT97-qtjS6109",
-    };
-    
+        _keys = keys;
+    }
+
     /// <summary>
     /// Генерация лицензионного ключа
     /// </summary>

@@ -8,6 +8,11 @@
     Startup="OnStartup">
 
     <Application.Resources>
-        <ui:Resources Theme="Dark" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

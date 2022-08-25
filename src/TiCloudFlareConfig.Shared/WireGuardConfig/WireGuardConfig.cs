@@ -1,12 +1,11 @@
 ﻿// ReSharper disable MemberCanBePrivate.Global
 
 using System.Diagnostics;
-using System.IO.Compression;
 using System.Reflection;
 using Ardalis.GuardClauses;
+using ICSharpCode.SharpZipLib.Zip;
 using TiCloudFlareConfig.Shared.WireGuardConfig.Models;
 using Tomlyn;
-using Tomlyn.Model;
 
 namespace TiCloudFlareConfig.Shared.WireGuardConfig;
 
@@ -14,12 +13,27 @@ public static class WireGuardConfig
 {
     #region Constants
 
-    private const string FileName = "Resources\\wgcf.exe";
+    private const string KeysFileName = "Resources\\keys.toml";
+    private const string WgCfFileName = "Resources\\wgcf.exe";
 
     #endregion
     
     #region PublicMethods
 
+    public static void ExtractResources()
+    {
+        if (!File.Exists(KeysFileName))
+            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(KeysFileName), "Resources");
+        
+        if (!File.Exists(WgCfFileName))
+            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(WgCfFileName), "Resources");
+    }
+
+    public static KeysResponse FetchKeys()
+    {
+        return Toml.ToModel<KeysResponse>(File.ReadAllText(KeysFileName));
+    }
+    
     public static WireGuardConfigResponse Register(WireGuardConfigParams configParams)
     {
         var tagDate = $"{DateTime.Now.ToString("s").Replace(':', '-')}_Warp";
@@ -55,12 +69,43 @@ public static class WireGuardConfig
         return await Task.Run(() => Register(configParams));
     }
     
-    public static void CreateArchive(WireGuardConfigResponse configs, string outFileName)
+    public static void SaveAsConfig(WireGuardConfigResponse? configs, string directory, string filename)
     {
-        var dir = Path.GetDirectoryName(configs.FileConfig);
-        Guard.Against.Null(dir);
+        var confFileName = Path.Combine(directory, $"{filename}.conf");
+        var tomlFileName = Path.Combine(directory, $"{filename}.toml");
+
+        Guard.Against.Null(configs?.FileConfig);
+        Guard.Against.Null(configs.FileToml);
         
-        ZipFile.CreateFromDirectory(dir, outFileName);
+        File.Copy(configs.FileConfig, confFileName);
+        File.Copy(configs.FileToml, tomlFileName);
+        
+        DeleteTempFiles();
+    }
+
+    public static void SaveAsZip(WireGuardConfigResponse? configs, string directory, string filename)
+    {
+        Guard.Against.Null(configs?.FileConfig);
+        Guard.Against.Null(configs.FileToml);
+        
+        var zipFileName = Path.Combine(directory, $"{filename}.zip");
+        
+        using (var zipFile = ZipFile.Create(zipFileName))
+        {
+            zipFile.BeginUpdate();
+            zipFile.Add(configs.FileConfig, $"{Path.GetFileNameWithoutExtension(zipFileName)}.conf");
+            zipFile.Add(configs.FileToml, $"{Path.GetFileNameWithoutExtension(zipFileName)}.toml");
+            zipFile.CommitUpdate();
+            zipFile.Close();
+        }
+        
+        DeleteTempFiles();
+    }
+    
+    public static void DeleteTempFiles()
+    {
+        if (Directory.Exists("Configs"))
+            Directory.Delete("Configs", true);
     }
     
     #endregion
@@ -90,11 +135,11 @@ public static class WireGuardConfig
     
     private static void ProcStart(string args)
     {
-        if (!File.Exists(FileName))
-            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(FileName), "Resources");
+        if (!File.Exists(WgCfFileName))
+            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(WgCfFileName), "Resources");
         
         var proc = Process.Start(
-            new ProcessStartInfo($"{FileName}", args)
+            new ProcessStartInfo($"{WgCfFileName}", args)
             {
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
@@ -122,7 +167,7 @@ public static class WireGuardConfig
         configStr = configStr
             .Replace(
                 "Endpoint = engage.cloudflareclient.com:2408", 
-                $"Endpoint = {configParams.EndPoint}:{configParams.EndPointPort}");
+                $"Endpoint = {configParams.EndPoint}:{configParams.Port}");
         
         File.WriteAllText(config, configStr);
     }
@@ -138,6 +183,6 @@ public static class WireGuardConfig
         tomlModel["license_key"] = $"{configParams.License}";
         File.WriteAllText(toml, Toml.FromModel(tomlModel));
     }
-
+    
     #endregion
 }

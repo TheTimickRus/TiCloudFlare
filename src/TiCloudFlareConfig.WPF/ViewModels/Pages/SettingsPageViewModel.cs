@@ -1,5 +1,7 @@
-﻿namespace TiCloudFlareConfig.WPF.ViewModels.Pages;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class SettingsPageViewModel
-{
-}
+namespace TiCloudFlareConfig.WPF.ViewModels.Pages;
+
+[ObservableObject]
+public partial class SettingsPageViewModel
+{ }

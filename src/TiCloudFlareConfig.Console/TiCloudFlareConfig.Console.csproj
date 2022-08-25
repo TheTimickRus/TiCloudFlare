@@ -2,25 +2,29 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Company>TheTimickRus</Company>
-        <AssemblyVersion>1.0</AssemblyVersion>
-        <FileVersion>1.0</FileVersion>
+        <AssemblyVersion>1.1</AssemblyVersion>
+        <FileVersion>1.1</FileVersion>
+        <TargetFramework>net7.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
       <PackageReference Include="RestSharp" Version="108.0.2-alpha.0.6" />
-      <PackageReference Include="Spectre.Console" Version="0.44.1-preview.0.29" />
-      <PackageReference Include="Spectre.Console.Cli" Version="0.44.1-preview.0.29" />
+      <PackageReference Include="Spectre.Console" Version="0.44.1-preview.0.34" />
+      <PackageReference Include="Spectre.Console.Cli" Version="0.44.1-preview.0.34" />
       <PackageReference Include="Tomlyn" Version="0.15.0" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="Assets\wgcf.exe" />
-      <EmbeddedResource Include="Assets\wgcf.exe" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TiCloudFlareConfig.Shared\TiCloudFlareConfig.Shared.csproj" />
     </ItemGroup>
 
 </Project>

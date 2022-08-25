@@ -6,8 +6,8 @@ using TiCloudFlareConfig.Console.Libs;
 var app = new CommandApp<CloudFlareCommand>();
 app.Configure(configurator =>
 {
-    configurator.Settings.ApplicationName = "ImageResize.exe";
-    configurator.Settings.ApplicationVersion = "v.1.5.2 (09.07.2022)";
+    configurator.Settings.ApplicationName = Constants.Titles.ExecutableName;
+    configurator.Settings.ApplicationVersion = Constants.Titles.Version;
     configurator.Settings.ExceptionHandler += ex => 
     {
         AnsiConsoleLib.ShowFiglet(Constants.Titles.VeryShortTitle, Justify.Center, Constants.Colors.ErrorColor);
