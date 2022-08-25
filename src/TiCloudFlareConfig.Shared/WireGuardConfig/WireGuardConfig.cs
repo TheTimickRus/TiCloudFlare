@@ -1,9 +1,9 @@
 ﻿// ReSharper disable MemberCanBePrivate.Global
 
 using System.Diagnostics;
-using System.IO.Compression;
 using System.Reflection;
 using Ardalis.GuardClauses;
+using ICSharpCode.SharpZipLib.Zip;
 using TiCloudFlareConfig.Shared.WireGuardConfig.Models;
 using Tomlyn;
 
@@ -69,15 +69,40 @@ public static class WireGuardConfig
         return await Task.Run(() => Register(configParams));
     }
     
-    public static void CreateArchive(WireGuardConfigResponse configs, string outFileName)
+    public static void SaveAsConfig(WireGuardConfigResponse? configs, string directory, string filename)
     {
-        var dir = Path.GetDirectoryName(configs.FileConfig);
-        Guard.Against.Null(dir);
+        var confFileName = Path.Combine(directory, $"{filename}.conf");
+        var tomlFileName = Path.Combine(directory, $"{filename}.toml");
+
+        Guard.Against.Null(configs?.FileConfig);
+        Guard.Against.Null(configs.FileToml);
         
-        ZipFile.CreateFromDirectory(dir, outFileName);
+        File.Copy(configs.FileConfig, confFileName);
+        File.Copy(configs.FileToml, tomlFileName);
+        
+        DeleteTempFiles();
     }
 
-    public static void RemoveTempFiles()
+    public static void SaveAsZip(WireGuardConfigResponse? configs, string directory, string filename)
+    {
+        Guard.Against.Null(configs?.FileConfig);
+        Guard.Against.Null(configs.FileToml);
+        
+        var zipFileName = Path.Combine(directory, $"{filename}.zip");
+        
+        using (var zipFile = ZipFile.Create(zipFileName))
+        {
+            zipFile.BeginUpdate();
+            zipFile.Add(configs.FileConfig, $"{Path.GetFileNameWithoutExtension(zipFileName)}.conf");
+            zipFile.Add(configs.FileToml, $"{Path.GetFileNameWithoutExtension(zipFileName)}.toml");
+            zipFile.CommitUpdate();
+            zipFile.Close();
+        }
+        
+        DeleteTempFiles();
+    }
+    
+    public static void DeleteTempFiles()
     {
         if (Directory.Exists("Configs"))
             Directory.Delete("Configs", true);
@@ -158,6 +183,6 @@ public static class WireGuardConfig
         tomlModel["license_key"] = $"{configParams.License}";
         File.WriteAllText(toml, Toml.FromModel(tomlModel));
     }
-
+    
     #endregion
 }

@@ -123,7 +123,7 @@ public partial class HomePageViewModel
                 FileToml = await File.ReadAllTextAsync(configResponse.FileToml)
             });
             
-            WireGuardConfig.RemoveTempFiles();
+            WireGuardConfig.DeleteTempFiles();
         }
         catch (Exception ex)
         {

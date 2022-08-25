@@ -145,13 +145,13 @@ public partial class ConfigsPageViewModel
     {
         var zipFileName = SaveDialog("*.zip|*.zip");
         Guard.Against.Null(zipFileName);
-
+        
         var configFileName = $"{Path.GetFileNameWithoutExtension(zipFileName)}.conf";
         var tomlFileName = $"{Path.GetFileNameWithoutExtension(zipFileName)}.toml";
         
         File.WriteAllText(configFileName, item.FileConfig);
         File.WriteAllText(tomlFileName, item.FileToml);
-
+        
         using (var zipFile = ZipFile.Create(zipFileName))
         {
             zipFile.BeginUpdate();

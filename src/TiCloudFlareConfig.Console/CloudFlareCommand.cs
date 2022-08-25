@@ -22,6 +22,7 @@ public class CloudFlareCommand : Command<CloudFlareCommand.Settings>
 
     private KeysResponse? _keysResponse;
     private WireGuardConfigParams? _configParams;
+    private WireGuardConfigResponse? _configResponse;
     
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
@@ -55,6 +56,32 @@ public class CloudFlareCommand : Command<CloudFlareCommand.Settings>
         AnsiConsole.Status()
             .Spinner(Spinner.Known.Clock)
             .Start("Configuration files are being created, please wait...", StatusAction);
+
+        AnsiConsole.Console.Clear();
+        AnsiConsoleLib.ShowFiglet(Constants.Titles.VeryShortTitle, Justify.Left, Constants.Colors.MainColor);
+        AnsiConsoleLib.ShowRule(Constants.Titles.FullTitle, Justify.Right, Constants.Colors.MainColor);
+        
+        var fileName = AnsiConsole.Prompt(
+            new TextPrompt<string>(" Укажите имя файла БЕЗ расширения")
+                .DefaultValue("TiCloudFlare")
+                .AllowEmpty());
+        
+        AnsiConsole.WriteLine();
+        
+        var type = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title(" Save As:")
+                .AddChoices(".config | .toml", ".zip"));
+
+        switch (type)
+        {
+            case ".config | .toml":
+                WireGuardConfig.SaveAsConfig(_configResponse, Environment.CurrentDirectory, fileName);
+                break;
+            case ".zip":
+                WireGuardConfig.SaveAsZip(_configResponse, Environment.CurrentDirectory, fileName);
+                break;
+        }
         
         return ExitMessage(ReturnStatusType.Success);
     }
@@ -73,9 +100,7 @@ public class CloudFlareCommand : Command<CloudFlareCommand.Settings>
         AnsiConsoleLib.WriteConsoleLog(_configParams.License is null 
             ? "WARP account registration..."
             : "WARP+ account registration...");
-        var configResponse = WireGuardConfig.Register(_configParams);
-        
-        WireGuardConfig.CreateArchive(configResponse, $"\\{Path.GetFileNameWithoutExtension(configResponse.FileToml)}.zip");
+        _configResponse = WireGuardConfig.Register(_configParams);
     }
 
     private static int ExitMessage(ReturnStatusType statusType)
