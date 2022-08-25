@@ -3,6 +3,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
 using Ardalis.GuardClauses;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -11,7 +12,6 @@ using Microsoft.Win32;
 using TiCloudFlareConfig.WPF.Models.Pages.Configs;
 using TiCloudFlareConfig.WPF.Services.Database;
 using TiCloudFlareConfig.WPF.Services.TiDialog;
-using TiCloudFlareConfig.WPF.Services.TiMessageBox;
 using Wpf.Ui.Controls;
 
 namespace TiCloudFlareConfig.WPF.ViewModels.Pages;
@@ -27,6 +27,9 @@ public partial class ConfigsPageViewModel
     [ObservableProperty]
     private ConfigItem? _selectedConfigItem;
 
+    [ObservableProperty]
+    private Visibility _placeholderVisibility;
+    
     #endregion
     
     private readonly IDataBaseService _dataBaseService;
@@ -35,6 +38,7 @@ public partial class ConfigsPageViewModel
     {
         _dataBaseService = dataBaseService;
         _configs = new ObservableCollection<ConfigItem>(_dataBaseService.FetchAllConfigs());
+        _placeholderVisibility = _configs.Count > 0 ? Visibility.Hidden : Visibility.Visible;
     }
 
     #region Commands
@@ -72,6 +76,7 @@ public partial class ConfigsPageViewModel
         try
         {
             Configs = new ObservableCollection<ConfigItem>(_dataBaseService.FetchAllConfigs());
+            PlaceholderVisibility = Configs.Count > 0 ? Visibility.Hidden : Visibility.Visible;
         }
         catch (Exception ex)
         {

@@ -63,6 +63,7 @@
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem
                         Cache="True"
+                        Visibility="Hidden"
                         Content="Настройки"
                         Icon="Settings24"
                         PageTag="SettingsPage"
