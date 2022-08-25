@@ -29,38 +29,6 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
-                        <StackPanel.ContextMenu>
-                            <ContextMenu>
-                                <ui:MenuItem SymbolIcon="Save24" Header="Экспортировать как">
-                                    <ui:MenuItem
-                                        SymbolIcon="Settings24"
-                                        Header=".config | .toml"
-                                        Command="{Binding ExportCommand}"
-                                        CommandParameter="config" />
-                                    <ui:MenuItem
-                                        SymbolIcon="Archive24"
-                                        Header=".zip"
-                                        Command="{Binding ExportCommand}"
-                                        CommandParameter="zip" />
-                                </ui:MenuItem>
-                                <Separator />
-                                <ui:MenuItem SymbolIcon="WindowEdit20" Header="Действия">
-                                    <ui:MenuItem
-                                        SymbolIcon="Edit24"
-                                        IsEnabled="False"
-                                        Header="Изменить" />
-                                    <Separator />
-                                    <ui:MenuItem
-                                        SymbolIcon="Delete24"
-                                        Header="Удалить"
-                                        Command="{Binding DeleteCommand}" />
-                                    <ui:MenuItem
-                                        SymbolIcon="DeleteLines20"
-                                        Header="Удалить все конфиги"
-                                        Command="{Binding DeleteAllCommand}" />
-                                </ui:MenuItem>
-                            </ContextMenu>
-                        </StackPanel.ContextMenu>
                         <TextBlock
                             FontSize="16"
                             FontWeight="Bold"
@@ -72,6 +40,38 @@
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <ui:MenuItem SymbolIcon="Save24" Header="Экспортировать как">
+                        <ui:MenuItem
+                            SymbolIcon="Settings24"
+                            Header=".config | .toml"
+                            Command="{Binding ExportCommand}"
+                            CommandParameter="config" />
+                        <ui:MenuItem
+                            SymbolIcon="Archive24"
+                            Header=".zip"
+                            Command="{Binding ExportCommand}"
+                            CommandParameter="zip" />
+                    </ui:MenuItem>
+                    <Separator />
+                    <ui:MenuItem SymbolIcon="WindowEdit20" Header="Действия">
+                        <ui:MenuItem
+                            SymbolIcon="Edit24"
+                            IsEnabled="False"
+                            Header="Изменить" />
+                        <Separator />
+                        <ui:MenuItem
+                            SymbolIcon="Delete24"
+                            Header="Удалить"
+                            Command="{Binding DeleteCommand}" />
+                        <ui:MenuItem
+                            SymbolIcon="DeleteLines20"
+                            Header="Удалить все конфиги"
+                            Command="{Binding DeleteAllCommand}" />
+                    </ui:MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
         </ListBox>
     </Grid>
 </ui:UiPage>
