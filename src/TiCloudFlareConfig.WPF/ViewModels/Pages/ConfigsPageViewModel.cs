@@ -97,6 +97,8 @@ public partial class ConfigsPageViewModel
                 
                 _dataBaseService.RemoveConfig(SelectedConfigItem.Id);
                 Configs.Remove(SelectedConfigItem);
+                
+                PlaceholderVisibility = Configs.Count > 0 ? Visibility.Hidden : Visibility.Visible;
             });
         }
         catch (Exception ex)
@@ -116,6 +118,8 @@ public partial class ConfigsPageViewModel
                 
                 _dataBaseService.RemoveAllConfigs();
                 Configs.Clear();
+                
+                PlaceholderVisibility = Configs.Count > 0 ? Visibility.Hidden : Visibility.Visible;
             });
         }
         catch (Exception ex)
