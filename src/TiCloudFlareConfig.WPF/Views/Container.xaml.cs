@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using TiCloudFlareConfig.Shared.WireGuardConfig;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls.Interfaces;
@@ -75,8 +76,15 @@ namespace TiCloudFlareConfig.WPF.Views
 
             Task.Run(async () =>
             {
-                await Task.Delay(2000);
+                await Task.Delay(1000);
 
+                var isExtract = await Task.Factory.StartNew(WireGuardConfig.ExtractResources);
+                if (!isExtract)
+                {
+                    MessageBox.Show("Ошибка при извлечении файлов!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Application.Current.Shutdown();
+                }
+                
                 await Dispatcher.InvokeAsync(() =>
                 {
                     RootWelcomeGrid.Visibility = Visibility.Hidden;
