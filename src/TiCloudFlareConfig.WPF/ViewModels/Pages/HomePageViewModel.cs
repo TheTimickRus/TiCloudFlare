@@ -51,7 +51,6 @@ public partial class HomePageViewModel
     {
         _dataBaseService = dataBaseService;
         
-        WireGuardConfig.ExtractResources();
         _keysResponse = WireGuardConfig.FetchKeys();
         
         _endPoints = _keysResponse.EndPoints;
