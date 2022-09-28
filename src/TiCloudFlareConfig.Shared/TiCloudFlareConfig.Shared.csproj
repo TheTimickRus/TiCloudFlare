@@ -8,9 +8,9 @@
 
     <ItemGroup>
       <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
-      <PackageReference Include="RestSharp" Version="108.0.2-alpha.0.6" />
+      <PackageReference Include="RestSharp" Version="108.0.3-alpha.0.5" />
       <PackageReference Include="SharpCompress" Version="0.32.2" />
-      <PackageReference Include="SharpZipLib" Version="1.3.3" />
+      <PackageReference Include="SharpZipLib" Version="1.4.0" />
       <PackageReference Include="Tomlyn" Version="0.15.0" />
     </ItemGroup>
 
