@@ -11,6 +11,9 @@
  
 # Скриншоты
 <img src="screenshots/1.png" width="741" height="396"/>
+<img src="screenshots/2.png" width="741" height="396"/>
+<img src="screenshots/3.png" width="741" height="396"/>
+<img src="screenshots/4.png" width="741" height="396"/>
 
 # Спасибо
  * [wgcf](https://github.com/ViRb3/wgcf)
