@@ -16,13 +16,12 @@ using Wpf.Ui.Controls;
 
 namespace TiCloudFlareConfig.WPF.ViewModels.Pages;
 
-[ObservableObject]
-public partial class ConfigsPageViewModel
+public partial class ConfigsPageViewModel : ObservableObject
 {
     #region Properties
 
     [ObservableProperty]
-    private ObservableCollection<ConfigItem> _configs;
+    private ObservableCollection<ConfigItem> _configs = new();
 
     [ObservableProperty]
     private ConfigItem? _selectedConfigItem;
@@ -37,8 +36,8 @@ public partial class ConfigsPageViewModel
     public ConfigsPageViewModel(IDataBaseService dataBaseService)
     {
         _dataBaseService = dataBaseService;
-        _configs = new ObservableCollection<ConfigItem>(_dataBaseService.FetchAllConfigs());
-        _placeholderVisibility = _configs.Count > 0 ? Visibility.Hidden : Visibility.Visible;
+        Configs = new ObservableCollection<ConfigItem>(_dataBaseService.FetchAllConfigs());
+        PlaceholderVisibility = Configs.Count > 0 ? Visibility.Hidden : Visibility.Visible;
     }
 
     #region Commands

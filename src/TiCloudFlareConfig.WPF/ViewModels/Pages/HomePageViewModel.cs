@@ -17,18 +17,17 @@ using Wpf.Ui.Controls;
 
 namespace TiCloudFlareConfig.WPF.ViewModels.Pages;
 
-[ObservableObject]
-public partial class HomePageViewModel
+public partial class HomePageViewModel : ObservableObject
 {
     [ObservableProperty]
     private string? _licenseKey;
     
     [ObservableProperty]
-    private List<string> _endPoints;
+    private List<string> _endPoints = new();
     [ObservableProperty]
-    private List<string> _endPointPorts;
+    private List<string> _endPointPorts = new();
     [ObservableProperty]
-    private List<string> _mtu;
+    private List<string> _mtu = new();
     
     [ObservableProperty]
     private string? _selectedEndPoint;
@@ -53,12 +52,12 @@ public partial class HomePageViewModel
         
         _keysResponse = WireGuardConfig.FetchKeys();
         
-        _endPoints = _keysResponse.EndPoints;
-        _endPointPorts = _keysResponse.Ports;
-        _mtu = _keysResponse.MTU;
-        _selectedEndPointIndex = 0;
-        _selectedEndPointPortIndex = 0;
-        _selectedMtuIndex = 0;
+        EndPoints = _keysResponse.EndPoints;
+        EndPointPorts = _keysResponse.Ports;
+        Mtu = _keysResponse.MTU;
+        SelectedEndPointIndex = 0;
+        SelectedEndPointPortIndex = 0;
+        SelectedMtuIndex = 0;
     }
 
     [RelayCommand]
@@ -103,10 +102,10 @@ public partial class HomePageViewModel
         {
             var configParams = new WireGuardConfigParams
             {
-                License = _licenseKey,
-                EndPoint = _selectedEndPoint,
-                Port = _selectedEndPointPort,
-                Mtu = _selectedMtu
+                License = LicenseKey,
+                EndPoint = SelectedEndPoint,
+                Port = SelectedEndPointPort,
+                Mtu = SelectedMtu
             };
 
             var configResponse = await WireGuardConfig.RegisterAsync(configParams);
