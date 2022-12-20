@@ -4,6 +4,11 @@ using System.Diagnostics;
 using System.Reflection;
 using Ardalis.GuardClauses;
 using ICSharpCode.SharpZipLib.Zip;
+using SharpCompress.Archives;
+using SharpCompress.Archives.SevenZip;
+using SharpCompress.Common;
+using SharpCompress.Readers;
+using SharpCompress.Writers;
 using TiCloudFlareConfig.Shared.WireGuardConfig.Models;
 using Tomlyn;
 
@@ -20,13 +25,28 @@ public static class WireGuardConfig
     
     #region PublicMethods
 
-    public static void ExtractResources()
+    public static bool ExtractResources()
     {
-        if (!File.Exists(KeysFileName))
-            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(KeysFileName), "Resources");
+        if (File.Exists(KeysFileName) && File.Exists(WgCfFileName))
+            return true;
+
+        try
+        {
+            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", "Resources.7z", "Resources");
+
+            using var archive = SevenZipArchive.Open("Resources\\Resources.7z");
+            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+                entry.WriteToDirectory("Resources", new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
+            archive.Dispose();
         
-        if (!File.Exists(WgCfFileName))
-            ExtractResourceToFile("TiCloudFlareConfig.Shared", "Assets", Path.GetFileName(WgCfFileName), "Resources");
+            File.Delete("Resources\\Resources.7z");
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public static KeysResponse FetchKeys()
